@@ -6,6 +6,8 @@ import { currentUser } from "@/lib/auth";
 import { ShoppingProvider } from "@/components/storefront/shopping-provider";
 import { Header } from "@/components/storefront/header";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../../Logo.jpeg";
 import { brandName, brandSlogan } from "@/lib/branding";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -46,7 +48,12 @@ export default async function RootLayout({
             <div className="footer-top">
               <div>
                 <Link className="wordmark" href="/">
-                  {brandName}
+                  <Image
+                    className="brand-logo"
+                    src={logo}
+                    alt={brandName}
+                    sizes="128px"
+                  />
                 </Link>
                 <p>
                   {brandSlogan}

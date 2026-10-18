@@ -1,6 +1,7 @@
 ﻿"use client";
 import Link from "next/link";
 import Image from "next/image";
+import logo from "../../../Logo.jpeg";
 import { useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -71,16 +72,13 @@ export function Header({
           {open ? <X /> : <Menu />}
         </button>
         <Link href="/" className="wordmark">
-          {settings.logo_url ? (
-            <Image
-              src={settings.logo_url}
-              alt={brandName}
-              width={150}
-              height={45}
-            />
-          ) : (
-            <span className="brand-name">{brandName}</span>
-          )}
+          <Image
+            className="brand-logo"
+            src={logo}
+            alt={brandName}
+            sizes="(max-width: 760px) 104px, 128px"
+            priority
+          />
           <span className="brand-slogan">{brandSlogan}</span>
         </Link>
         <nav

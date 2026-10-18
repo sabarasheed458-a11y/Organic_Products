@@ -34,6 +34,21 @@
 .wordmark img {
   object-fit: contain;
 }
+.wordmark .brand-logo {
+  display: block;
+  width: 128px;
+  height: auto;
+}
+@media (max-width: 760px) {
+  .header .wordmark .brand-logo {
+    width: 104px;
+  }
+  .header .wordmark .brand-slogan {
+    max-width: 104px;
+    font-size: 6px;
+    letter-spacing: 0.04em;
+  }
+}
 .mobile-menu-account {
   display: none;
 }
