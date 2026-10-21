@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { ProductImage } from "./product-image";
-import { hasSizes, productGallery } from "@/lib/product-options";
+import { hasSizes, productGallery, productSizes } from "@/lib/product-options";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -29,7 +29,7 @@ export function ProductDetail({
   const variants = product.product_variants.filter((v) => v.active);
   const sizing = hasSizes(product);
   const colors = [...new Set(variants.map((v) => v.color))];
-  const sizes = [...new Set(variants.map((v) => v.size))];
+  const sizes = productSizes(product);
   const [color, setColor] = useState(
       variants.find(
         (v) => (v.inventory?.on_hand ?? 0) - (v.inventory?.reserved ?? 0) > 0,

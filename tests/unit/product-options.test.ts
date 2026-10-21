@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { hasSizes, productGallery } from "@/lib/product-options";
+import { hasSizes, productGallery, productSizes } from "@/lib/product-options";
 import type { Product } from "@/types";
 const product = {
   product_variants: [{ size: "M" }],
@@ -46,4 +46,15 @@ it("orders explicit views and prefers matching color photos without duplicating 
 it("preserves legacy sizing and honors explicit unsized products", () => {
   expect(hasSizes(product)).toBe(true);
   expect(hasSizes({ ...product, has_sizes: false })).toBe(false);
+});
+
+it("shows S, M and L in order even when only L is saved", () => {
+  expect(
+    productSizes({
+      ...product,
+      has_sizes: true,
+      product_variants: [{ size: "L", active: true }],
+    } as Product),
+  ).toEqual(["S", "M", "L"]);
+  expect(productSizes({ ...product, has_sizes: false })).toEqual([]);
 });

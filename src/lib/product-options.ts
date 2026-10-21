@@ -1,4 +1,14 @@
 import type { Product } from "@/types";
+export const standardSizes = ["S", "M", "L"] as const;
+export function productSizes(product: Product) {
+  if (!hasSizes(product)) return [];
+  return [
+    ...new Set([
+      ...standardSizes,
+      ...product.product_variants.filter((v) => v.active).map((v) => v.size),
+    ]),
+  ];
+}
 export const imageViews = ["front", "back", "top", "bottom"] as const;
 export function hasSizes(product: Product) {
   return (

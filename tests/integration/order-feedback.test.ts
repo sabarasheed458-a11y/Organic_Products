@@ -144,7 +144,7 @@ it("records every stage, refuses invalid/backward/repeated transitions and leave
   const o = await place(2);
   await expect(advance(o.id, "confirmed")).rejects.toThrow("Forbidden");
   await actor(orders);
-  await expect(advance(o.id, "shipped")).rejects.toThrow(
+  await expect(advance(o.id, "returned")).rejects.toThrow(
     "Invalid order transition",
   );
   for (const s of stages) await advance(o.id, s);
@@ -341,4 +341,21 @@ it("lets customers update only their own review and restricts admin approval/rep
       )
     ).rows.length,
   ).toBeGreaterThan(0);
+});
+
+it("allows direct forward fulfillment updates and still requires delivery details", async () => {
+  const o = await place(1);
+  await actor(orders);
+  await advance(o.id, "confirmed");
+  await expect(
+    db.query(
+      "select transition_order($1,'delivered','','','Direct delivery')",
+      [o.id],
+    ),
+  ).rejects.toThrow("Courier and tracking required");
+  await advance(o.id, "delivered");
+  expect((await progress(o.id))?.status).toBe("delivered");
+  await expect(advance(o.id, "packed")).rejects.toThrow(
+    "Invalid order transition",
+  );
 });

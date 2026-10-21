@@ -14,7 +14,11 @@ import {
   duplicateProduct,
 } from "@/actions/commerce";
 import type { Product, Category, Variant, ActionResult } from "@/types";
-import { imageViews } from "@/lib/product-options";
+import {
+  imageViews,
+  standardSizes,
+  hasSizes as productHasSizes,
+} from "@/lib/product-options";
 import { actionRequest } from "@/lib/action-request";
 import { ProductLifecycle, ProductAssetCleanup } from "./product-lifecycle";
 export function ProductEditor({
@@ -216,12 +220,26 @@ export function ProductEditor({
               key={v.id}
               variant={v}
               productId={product.id}
-              hasSizes={product.has_sizes ?? false}
+              hasSizes={productHasSizes(product)}
             />
           ))}
+          {productHasSizes(product) &&
+            standardSizes
+              .filter(
+                (size) =>
+                  !product.product_variants.some((v) => v.size === size),
+              )
+              .map((size) => (
+                <VariantEditor
+                  key={size}
+                  productId={product.id}
+                  hasSizes
+                  defaultSize={size}
+                />
+              ))}
           <VariantEditor
             productId={product.id}
-            hasSizes={product.has_sizes ?? false}
+            hasSizes={productHasSizes(product)}
           />
           <p className="muted">
             Deactivate variants to remove sizes or colors from sale. Existing
@@ -337,7 +355,9 @@ export function VariantEditor({
   variant,
   productId,
   hasSizes = true,
+  defaultSize,
 }: {
+  defaultSize?: string;
   hasSizes?: boolean;
   variant?: Variant;
   productId: string;
@@ -351,7 +371,9 @@ export function VariantEditor({
       <summary>
         {variant
           ? `${variant.size} / ${variant.color} · ${variant.sku} · Stock ${variant.inventory?.on_hand ?? 0}`
-          : "Add variant"}
+          : defaultSize
+            ? `Add size ${defaultSize}`
+            : "Add variant"}
       </summary>
       <form
         onSubmit={async (e) => {
@@ -387,11 +409,14 @@ export function VariantEditor({
             Size
             <select
               name="size"
-              defaultValue={variant?.size ?? (hasSizes ? "S" : "One size")}
+              defaultValue={
+                variant?.size ?? defaultSize ?? (hasSizes ? "S" : "One size")
+              }
             >
               {[
                 ...new Set([
-                  ...(hasSizes ? ["S", "M", "L"] : ["One size"]),
+                  ...standardSizes,
+                  ...(!hasSizes ? ["One size"] : []),
                   ...(variant ? [variant.size] : []),
                 ]),
               ].map((size) => (

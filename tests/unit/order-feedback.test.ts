@@ -28,9 +28,28 @@ it("keeps fulfillment forward-only while preserving cancellation and returns", (
     "out_for_delivery",
     "delivered",
   ]);
-  expect(transitions.processing).toEqual(["packed", "cancelled"]);
-  expect(transitions.packed).toEqual(["shipped", "cancelled"]);
-  expect(transitions.shipped).toEqual(["out_for_delivery"]);
+  expect(transitions.confirmed).toEqual([
+    "processing",
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ]);
+  expect(transitions.processing).toEqual([
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ]);
+  expect(transitions.packed).toEqual([
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ]);
+  expect(transitions.shipped).toEqual(["out_for_delivery", "delivered"]);
   expect(transitions.out_for_delivery).toEqual(["delivered"]);
   expect(transitions.delivered).toEqual(["returned"]);
   expect(transitions.cancelled).toEqual([]);

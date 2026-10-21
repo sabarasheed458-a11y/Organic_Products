@@ -87,7 +87,7 @@ describe("Security helpers", () => {
     expect(can("owner", "settings")).toBe(true);
   });
   it("allows only documented order transitions", () => {
-    expect(transitions.pending).not.toContain("delivered");
+    expect(transitions.pending).toContain("delivered");
     expect(transitions.cancelled).toEqual([]);
     expect(transitions.delivered).toEqual(["returned"]);
   });

@@ -42,11 +42,32 @@ export function safePath(
   }
 }
 export const transitions: Record<string, string[]> = {
-  pending: ["confirmed", "cancelled"],
-  confirmed: ["processing", "cancelled"],
-  processing: ["packed", "cancelled"],
-  packed: ["shipped", "cancelled"],
-  shipped: ["out_for_delivery"],
+  pending: [
+    "confirmed",
+    "processing",
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ],
+  confirmed: [
+    "processing",
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ],
+  processing: [
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ],
+  packed: ["shipped", "out_for_delivery", "delivered", "cancelled"],
+  shipped: ["out_for_delivery", "delivered"],
   out_for_delivery: ["delivered"],
   delivered: ["returned"],
   cancelled: [],
